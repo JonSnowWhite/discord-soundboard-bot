@@ -33,7 +33,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
-    opus.load_opus('libopus-0.x64.dll') #make sure this DLL is installed
+    opus.load_opus('libopus-0.x64.dll/libopus.so.0') #the opus library
 
 #----------voice-Command and functions------------
 
@@ -85,7 +85,7 @@ async def play(ctx, name = '', *args):
     try:
         player = bot.voice_client_in(server).create_ffmpeg_player(filename = name + '.mp3', after=lambda: disconnector(bot=bot, server=server))
     except:
-        return await bot.say('I don\'t have this sound!/ffmpeg error!') #Should never occur as name gets handled earlier
+        return await bot.say('I don\'t have this sound!/ffmpeg error!') #Should never occur as name is handled earlier
     #------play
 
     player.start()
