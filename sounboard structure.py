@@ -30,7 +30,7 @@ from discord import opus
 
 #----------------------Instanciations--------------
 
-board_list = [i[:-4] for i in os.listdir() if '.mp3' in i] #creating a list of all the .mp3 files in the current folder
+board_list = sorted([i[:-4] for i in os.listdir() if '.mp3' in i]) #creating a list of all the .mp3 files in the current folder
 board_string = ''
 for i in board_list:
     board_string = board_string + '\n' + i
@@ -44,7 +44,10 @@ bot = commands.Bot(command_prefix='!')
 
 help_dict = {
                 'play' : 'Type ' + bot.command_prefix + 'play + name \n List of names:' + board_string
+                ,'stop' : 'Type' + bot.command_prefix + 'stop to make the bot stop playing any kind of music and leave the voice channel!'
                 }
+
+player_dict = {}
 
 #---------------------Events-----------------------
 
@@ -72,6 +75,21 @@ def disconnector(bot, server):
         fut.result()
     except:
         pass
+
+@bot.command(pass_context = True, brief = 'Makes the bot stop playing!', help = help_dict['stop'])
+async def stop(ctx, *args):
+    """A command to stop any voice activity of the bot
+    
+    Args:
+        ctx: context information about the command written by the user
+    """
+    server = ctx.message.server
+    try:
+        player_dict[server].stop()
+        bot.voice_client_in(server).disconnect()
+        return None
+    except:
+        return None
 
 
 @bot.command(pass_context = True,  help = help_dict['play'], brief = 'Plays a sound. Use \'' + bot.command_prefix + 'help play\' for a list of names.', aliases = ['Sound', 'sound', 'Play'])
@@ -105,6 +123,7 @@ async def play(ctx, name = '', *args):
 
     try:
         player = bot.voice_client_in(server).create_ffmpeg_player(filename = name + '.mp3', after=lambda: disconnector(bot=bot, server=server))
+        player_dict[server] = player
     except:
         return await bot.say('I don\'t have this sound!/ffmpeg error!') #Should never occur as name is handled earlier
     #------play
