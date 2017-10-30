@@ -12,7 +12,7 @@ class ExtModule:
         Returns:
             Boolean: True or False, wether the invoker of a command fulfills the predicate
             """
-        return commands.is_owner()
+        return ctx.bot.is_owner(ctx.author)
 
     @staticmethod
     def is_admin():
