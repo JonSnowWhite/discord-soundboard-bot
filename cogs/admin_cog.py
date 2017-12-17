@@ -145,8 +145,8 @@ class AdminCog:
                       aliases=['change_game'],
                       description='Changes the activity in the activity feed of the bot')
     @ExtModule.is_admin()
-    # @ExtModule.reaction_respond
-    async def change_activity(self, ctx:commands,Context, *args):
+    @ExtModule.reaction_respond
+    async def change_activity(self, ctx: commands.Context, *args):
         """This function changes sets the activity in the activity feed of the bot to the words delivered in args
         Args:
             *args: The words of the activity

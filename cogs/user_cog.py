@@ -35,7 +35,7 @@ class UserCog:
             ctx: The context of the command, which is mandatory in rewrite (commands.Context)
             args: The words the text will consist of (str)
             """
-        text = ''
+        text = ' '
         for word in args:
             text = text + str(word) + ' '
         text = text[:-1]
@@ -77,7 +77,6 @@ class UserCog:
         Args:
             ctx: The context of the command, which is mandatory in rewrite (commands.Context)
             """
-        print(self, ctx)
         _help_string = 'command name || (aliases): || arguments || help description\n'
         for command in self.bot.commands:
             if ExtModule.is_admin_predicate in command.checks:
