@@ -18,6 +18,11 @@ class AdminCog:
         self.log_channel_id = log_channel_id
         self.send_log = None                  # will be assigned in the on_ready event
 
+    async def on_resumed(self):
+        """Is called when the bot made a successfull reconnect, after disconnecting
+        """
+        await self.send_log("Restarted successfully")
+
     async def on_ready(self):
         """Is called when the bot is completely started up. Calls in this function need variables only a started bot can give.
         """
@@ -53,11 +58,11 @@ class AdminCog:
         _guild_names = 'List of all guilds: '
         for guild in self.bot.guilds:
             if len(_guild_names) + len(guild.name) > 1800:  # not accurate, 200 literals buffer catch it
-                await self.send_log(_guild_names)
+                await self.send_log(_guild_names[:-2])
                 _guild_names = ''
             else:
-                _guild_names = _guild_names + ', ' + guild.name + '(' + str(guild.id) + ')'
-        await self.send_log(_guild_names)
+                _guild_names = _guild_names + guild.name + '(' + str(guild.id) + ')' + ', '
+        await self.send_log(_guild_names[:-2])
 
     @commands.command(name='leave',
                       description='(ID) || The bot will attempt to leave the server with the given ID.')

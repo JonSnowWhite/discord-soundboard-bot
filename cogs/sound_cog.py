@@ -50,8 +50,11 @@ class SoundboardCog:
         opus.load_opus('libopus.so.0')  # the opus library
 
     @commands.command(name='play',
-                      description='name(optional) || Plays the sound with the given name. Ignores upper/lowercase.'
-                                  ' If none is found or none is given the sound is chosen randomly.'
+                      description=' tags/name || Plays the sound with the first name found in the arguments.'
+                                  ' If no name is found, plays a random sound which has all tags found in the aguments.'
+                                  ' Ignores upper/lowercase.'
+                                  ' If no tags are found or no sound with all the given tags exists'
+                                  ' the sound is chosen randomly.'
                                   ' Requires you to be in a voice channel!')
     @ExtModule.reaction_respond
     async def play(self, ctx: commands.Context, *args):
@@ -122,9 +125,9 @@ class SoundboardCog:
         _sound_string = 'List of all sounds (command format !play [soundname]):'
         for sound in self.sound_list:
             if len(_sound_string) + 1 + len(sound) > 1800:
-                await ctx.channel.send(_sound_string)
+                await ctx.channel.send('```\n' + _sound_string + '```\n')
             _sound_string = _sound_string + '\n' + sound
-        await ctx.channel.send(_sound_string)
+        await ctx.channel.send('```\n' + _sound_string + '```\n')
 
     @commands.command(name='taglist',
                       aliases=['tags'], description='Prints a list of all tags with soundnames on the soundboard.')
@@ -138,13 +141,13 @@ class SoundboardCog:
         _tag_string = 'tag || sounds\n'
         for tag in self.tag_dict.keys():
             if len(_tag_string) > 1800:
-                await ctx.channel.send(_tag_string)
+                await ctx.channel.send('```\n' + _tag_string + '```\n')
                 _tag_string = ''
             _tag_string = _tag_string + tag + ' || '
             for sound in self.tag_dict[tag]:
                 _tag_string = _tag_string + sound + ' '
             _tag_string = _tag_string + '\n'
-        await ctx.channel.send(_tag_string)
+        await ctx.channel.send('```\n' + _tag_string + '```\n')
 
     @staticmethod
     def disconnector(voice_client: discord.VoiceClient, bot: commands.Bot):
