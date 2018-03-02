@@ -18,3 +18,6 @@ Replace ``async`` in ``async def`` with the decorator ``@asyncio.coroutine``. Re
 http://discordpy.readthedocs.io/en/rewrite/migrating.html
 Short version:
 Servers are guilds now // snowflakes are int // Models are Stateful, meaning much functionality went from discord.Client to the other Classes // Changes to the VoiceState of Members // many more misellaneous changes 
+
+# Privacy Disclaimer:
+This bot saves data about your sever through the discord.py library. This script allows the owner of this bot access to servers names and IDs. It futhermore logs every command used without any information about where or by whom. The suggest command allows direct feedback to the bots owner and does not give any information about the person that used it or place it was used. You can ensure that this bot does not read messages in specific channels by managing its permissions. This Disclaimer is not valid for any scipt that is a modified version of this one.
