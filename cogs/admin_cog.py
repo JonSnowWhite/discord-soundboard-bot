@@ -8,7 +8,7 @@ class AdminCog:
     """This cog contains commands that can be used by the bots admin(s).
     This will not contain commands, which ban and kick a user or let the bot behave as a server admin.
     """
-    def __init__(self, bot: commands.Bot, log_channel_id: int=None):
+    def __init__(self, bot: commands.Bot, log_channel_id: int=None, activity: str=''):
         """The constructor for the AdminCog class, it assigns the important variables used by the commands below
         Args:
             bot: The bot the commands will be added to (commands.Bot)
@@ -17,17 +17,20 @@ class AdminCog:
         self.bot = bot
         self.log_channel_id = log_channel_id
         self.send_log = None                  # will be assigned in the on_ready event
+        self.activity = activity
 
     async def on_resumed(self):
         """Is called when the bot made a successfull reconnect, after disconnecting
         """
         await self.send_log("Restarted successfully")
+        game = discord.Game(name=self.activity)
+        await self.bot.change_presence(game=game)
 
     async def on_ready(self):
         """Is called when the bot is completely started up. Calls in this function need variables only a started bot can give.
         """
         self.send_log = ExtModule.get_send_log(self)
-        game = discord.Game(name='!help')
+        game = discord.Game(name=self.activity)
         await self.bot.change_presence(game=game)
 
     async def on_guild_join(self, guild: discord.Guild):
@@ -35,14 +38,14 @@ class AdminCog:
         Args:
             guild: The guild which the bot joined on (discord.Guild)
             """
-        await self.send_log('Joined guild: ' + guild.name)
+        await self.send_log('Joined guild: ' + guild.name + '(' + str(guild.id) + ')')
 
     async def on_guild_remove(self, guild: discord.Guild):
         """Is called when the bot leaves a guild. Sends an informative message to the log_channel
         Args:
             guild: The guild which was left by the bot (discord.Guild)
             """
-        await self.send_log('Left guild: ' + guild.name)
+        await self.send_log('Left guild: ' + guild.name + '(' + str(guild.id) + ')')
 
     @commands.command(name='serverlist',
                       aliases=['list'],
@@ -162,4 +165,5 @@ class AdminCog:
             activity = activity + ' ' + str(word)
         game = discord.Game(name=activity)
         await self.bot.change_presence(game=game)
+        self.activity = activity
         await self.send_log('Changed activity to: ' + activity)
